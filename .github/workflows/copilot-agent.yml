@@ -1,0 +1,77 @@
+name: Copilot Agent
+
+on:
+  workflow_call:
+    inputs:
+      mode:
+        description: "Agent mode to run (reviewer | fixer)"
+        required: true
+        type: string
+      prompt_override:
+        description: "Optional prompt override (path to .md file)"
+        required: false
+        type: string
+        default: ""
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate mode input
+        run: |
+          case "${{ inputs.mode }}" in
+            reviewer|fixer) echo "Mode: ${{ inputs.mode }}" ;;
+            *) echo "Invalid mode: ${{ inputs.mode }}. Must be 'reviewer' or 'fixer'." && exit 1 ;;
+          esac
+
+      - name: Load base prompt
+        id: base_prompt
+        run: |
+          BASE=$(cat prompts/base.md)
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$BASE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Load mode prompt
+        id: mode_prompt
+        run: |
+          PROMPT_FILE="${{ inputs.prompt_override }}"
+          if [ -z "$PROMPT_FILE" ]; then
+            PROMPT_FILE="prompts/modes/${{ inputs.mode }}.md"
+          fi
+          MODE=$(cat "$PROMPT_FILE")
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$MODE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Load config
+        id: config
+        run: |
+          CONFIG=$(cat config/copilot.json)
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$CONFIG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Run Copilot agent
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AGENT_MODE: ${{ inputs.mode }}
+          BASE_PROMPT: ${{ steps.base_prompt.outputs.content }}
+          MODE_PROMPT: ${{ steps.mode_prompt.outputs.content }}
+          AGENT_CONFIG: ${{ steps.config.outputs.content }}
+        run: |
+          echo "Running Copilot agent in '$AGENT_MODE' mode..."
+          echo "Base prompt loaded: $(echo "$BASE_PROMPT" | wc -l) lines"
+          echo "Mode prompt loaded: $(echo "$MODE_PROMPT" | wc -l) lines"
+          echo "Config loaded: $(echo "$AGENT_CONFIG" | wc -c) bytes"
