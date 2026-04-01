@@ -10,7 +10,7 @@ These rules apply to every repository in the OpensourceKD organization.
 
 1. **No nested ifs or callback hells.** Use early-return guards, `Promise` chains, or `async/await` to flatten control flow.
 2. **File length ≤ ~100 lines.** Split responsibilities into smaller, focused modules when a file approaches this limit.
-3. **Declarative syntax.** Use `Array.map`, `Array.filter`, `Array.reduce`, `Array.find`, `Object.entries`, and other native functional methods instead of `for`/`while` loops.
+3. **Declarative syntax.** Prefer `Array.map`, `Array.filter`, `Array.reduce`, `Array.find`, and `Object.entries` for data transformations. Imperative `for`/`while` loops are a last resort.
 4. **Pure functions.** Functions must not produce side effects. Isolate side effects (I/O, state mutations) at the boundary layer.
 5. **Collocated utilities.** Put helpers and utils next to the feature they serve. Do not create a single catch-all `utils.ts`; instead use focused files such as `auth.utils.ts`, `date.utils.ts`, etc.
 6. **No TypeScript `any`.** Use explicit types, `unknown` with type-guards, or generics. The `any` type defeats TypeScript's safety guarantees.

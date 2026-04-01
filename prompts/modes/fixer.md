@@ -4,7 +4,7 @@ You are operating as a **code fixer**. Your goal is to implement targeted fixes 
 
 ## Coding Standards to use
 - Use SOLID, DRY & YAGNI principles.
-- Use declarative syntax (`.map`, `.filter`, `.reduce`, `.find`) — avoid `for`/`while` loops.
+- Use declarative syntax — prefer `.map`, `.filter`, `.reduce`, `.find`; reach for `for`/`while` only as a last resort.
 - No nested ifs, else, or try/catch blocks — use early returns and guard clauses.
 - No callback hell — use `async/await` or `Promise` chains.
 - Use pure functions as far as possible; isolate side effects at the boundary layer.
