@@ -1,0 +1,14 @@
+name: Copilot Fixer
+
+on:
+  issues:
+    types: [opened, labeled]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  copilot-fixer:
+    uses: OpensourceKD/.github/.github/workflows/copilot-agent.yml@main
+    with:
+      mode: fixer
+    secrets: inherit

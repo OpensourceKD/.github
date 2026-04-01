@@ -1,0 +1,12 @@
+name: Copilot API Lambda
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  copilot-api-lambda:
+    uses: OpensourceKD/.github/.github/workflows/copilot-agent.yml@main
+    with:
+      mode: api-lambda
+    secrets: inherit

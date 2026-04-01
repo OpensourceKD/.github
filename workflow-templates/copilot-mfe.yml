@@ -1,0 +1,12 @@
+name: Copilot MFE
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  copilot-mfe:
+    uses: OpensourceKD/.github/.github/workflows/copilot-agent.yml@main
+    with:
+      mode: mfe
+    secrets: inherit

@@ -1,0 +1,6 @@
+{
+  "name": "Copilot Reviewer",
+  "description": "Run the Copilot agent in reviewer mode to automatically review pull requests.",
+  "iconName": "octicon-code-review",
+  "categories": ["Automation", "Code Review"]
+}

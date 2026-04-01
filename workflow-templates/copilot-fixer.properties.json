@@ -1,0 +1,6 @@
+{
+  "name": "Copilot Fixer",
+  "description": "Run the Copilot agent in fixer mode to address issues and PR review comments.",
+  "iconName": "octicon-tools",
+  "categories": ["Automation"]
+}

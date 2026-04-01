@@ -1,0 +1,12 @@
+name: Copilot Shell UI
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  copilot-shell-ui:
+    uses: OpensourceKD/.github/.github/workflows/copilot-agent.yml@main
+    with:
+      mode: shell-ui
+    secrets: inherit

@@ -1,0 +1,12 @@
+name: Copilot Reviewer
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  copilot-reviewer:
+    uses: OpensourceKD/.github/.github/workflows/copilot-agent.yml@main
+    with:
+      mode: reviewer
+    secrets: inherit

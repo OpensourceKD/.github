@@ -11,7 +11,8 @@
       "fixer": "prompts/modes/fixer.md",
       "shell-ui": "prompts/modes/shell-ui.md",
       "mfe": "prompts/modes/mfe.md",
-      "api-lambda": "prompts/modes/api-lambda.md"
+      "api-lambda": "prompts/modes/api-lambda.md",
+      "reviewer": "prompts/modes/reviewer.md"
     }
   },
   "workflow": ".github/workflows/copilot-agent.yml",

@@ -1,0 +1,6 @@
+{
+  "name": "Copilot MFE",
+  "description": "Run the Copilot agent in MFE mode for Micro-Frontend repos.",
+  "iconName": "octicon-package",
+  "categories": ["Automation"]
+}

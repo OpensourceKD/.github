@@ -1,0 +1,6 @@
+{
+  "name": "Copilot Shell UI",
+  "description": "Run the Copilot agent in Shell UI mode for MFE host application repos.",
+  "iconName": "octicon-browser",
+  "categories": ["Automation"]
+}

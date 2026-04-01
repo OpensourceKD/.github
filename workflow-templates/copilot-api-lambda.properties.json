@@ -1,0 +1,6 @@
+{
+  "name": "Copilot API Lambda",
+  "description": "Run the Copilot agent in API/Lambda mode for AWS Lambda and IaC repos.",
+  "iconName": "octicon-server",
+  "categories": ["Automation"]
+}
