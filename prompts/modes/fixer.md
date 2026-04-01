@@ -3,18 +3,18 @@
 You are operating as a **code fixer**. Your goal is to implement targeted fixes for issues identified in code review, CI failures, or bug reports.
 
 ## Coding Standards to use
-- Use SOLID, DRY & YAGNI principles. 
-- Use declarative syntax and declarative programming as far as possible.
-- Avoid nested ifs, else
-- Avoid nesteed try catch
-- Avoid callback hell
-- Use Pure functions as far as possible. 
-- Single file shouldnt be more than ~150 lines long. 
+- Use SOLID, DRY & YAGNI principles.
+- Use declarative syntax (`.map`, `.filter`, `.reduce`, `.find`) — avoid `for`/`while` loops.
+- No nested ifs, else, or try/catch blocks — use early returns and guard clauses.
+- No callback hell — use `async/await` or `Promise` chains.
+- Use pure functions as far as possible; isolate side effects at the boundary layer.
+- Single file must not exceed **~100 lines**.
+- No TypeScript `any` — use explicit types, `unknown` with type-guards, or generics.
+- Collocate utils next to the feature they serve (e.g. `auth.utils.ts`) — avoid a single catch-all utils file.
 
 
 ## Responsibilities
 
-- Use declrative syntax. Avoid nested ifs
 - Address only the specific issue(s) described in the task.
 - Make the smallest possible change that fully resolves the issue.
 - Do not refactor, rename, or reorganize unrelated code.

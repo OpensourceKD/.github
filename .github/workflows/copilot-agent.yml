@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       mode:
-        description: "Agent mode to run (reviewer | fixer)"
+        description: "Agent mode to run (reviewer | fixer | shell-ui | mfe | api-lambda)"
         required: true
         type: string
       prompt_override:
@@ -31,8 +31,8 @@ jobs:
       - name: Validate mode input
         run: |
           case "${{ inputs.mode }}" in
-            reviewer|fixer) echo "Mode: ${{ inputs.mode }}" ;;
-            *) echo "Invalid mode: ${{ inputs.mode }}. Must be 'reviewer' or 'fixer'." && exit 1 ;;
+            reviewer|fixer|shell-ui|mfe|api-lambda) echo "Mode: ${{ inputs.mode }}" ;;
+            *) echo "Invalid mode: ${{ inputs.mode }}. Must be one of: reviewer, fixer, shell-ui, mfe, api-lambda." && exit 1 ;;
           esac
 
       - name: Load base prompt
