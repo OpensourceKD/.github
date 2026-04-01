@@ -8,7 +8,6 @@
   "prompts": {
     "base": "prompts/base.md",
     "modes": {
-      "fixer": "prompts/modes/fixer.md",
       "shell-ui": "prompts/modes/shell-ui.md",
       "mfe": "prompts/modes/mfe.md",
       "api-lambda": "prompts/modes/api-lambda.md"
