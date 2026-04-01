@@ -8,8 +8,10 @@
   "prompts": {
     "base": "prompts/base.md",
     "modes": {
-      "reviewer": "prompts/modes/reviewer.md",
-      "fixer": "prompts/modes/fixer.md"
+      "fixer": "prompts/modes/fixer.md",
+      "shell-ui": "prompts/modes/shell-ui.md",
+      "mfe": "prompts/modes/mfe.md",
+      "api-lambda": "prompts/modes/api-lambda.md"
     }
   },
   "workflow": ".github/workflows/copilot-agent.yml",
