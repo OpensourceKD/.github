@@ -21,14 +21,19 @@ on:
     #   GITHUB_TOKEN:
     #     required: true
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   run-agent:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-      issues: write
-
+    # Below is not moved out of this block. Hence commenting
+    # permissions:
+    #   contents: read
+    #   pull-requests: write
+    #   issues: write
     steps:
       - name: Checkout calling repository
         uses: actions/checkout@v4
