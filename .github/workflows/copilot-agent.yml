@@ -12,6 +12,11 @@ on:
         required: false
         type: string
         default: ""
+      max_retries:
+        description: "Maximum number of agent invocations before skipping"
+        required: false
+        type: string
+        default: "3"
     secrets:
       GITHUB_TOKEN:
         required: true
@@ -49,7 +54,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          MAX=$(jq -r '.limits.max_iterations' governance/config/copilot.json)
+          MAX="${{ inputs.max_retries }}"
           if [ "${{ github.event_name }}" = "issues" ]; then
             NUMBER="${{ github.event.issue.number }}"
           else
@@ -91,15 +96,6 @@ jobs:
           echo "$MODE" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Load MFE context map
-        id: mfe_context
-        if: steps.retry_check.outputs.skip != 'true'
-        run: |
-          MAP=$(cat governance/ai-context/mfe-map.json)
-          echo "content<<EOF" >> $GITHUB_OUTPUT
-          echo "$MAP" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
       - name: Post Copilot agent prompt
         if: steps.retry_check.outputs.skip != 'true'
         env:
@@ -107,7 +103,6 @@ jobs:
           AGENT_MODE: ${{ inputs.mode }}
           BASE_PROMPT: ${{ steps.base_prompt.outputs.content }}
           MODE_PROMPT: ${{ steps.mode_prompt.outputs.content }}
-          MFE_CONTEXT: ${{ steps.mfe_context.outputs.content }}
         run: |
           set -e
           if [ "${{ github.event_name }}" = "issues" ]; then
@@ -120,8 +115,7 @@ jobs:
             printf '@github-copilot\n\n'
             printf '**Agent Mode:** `%s`\n\n---\n\n' "$AGENT_MODE"
             printf '%s\n\n---\n\n' "$BASE_PROMPT"
-            printf '%s\n\n---\n\n' "$MODE_PROMPT"
-            printf '**Org MFE Context**\n```json\n%s\n```\n' "$MFE_CONTEXT"
+            printf '%s\n' "$MODE_PROMPT"
           } > /tmp/agent-comment.md
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             gh pr comment "$NUMBER" --repo "$REPO" --body-file /tmp/agent-comment.md
