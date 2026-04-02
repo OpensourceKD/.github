@@ -43,16 +43,51 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
 
-      # 👇 THIS is where MCP goes
-      - name: Start OpenAPI MCP Server
+      - name: 🔍 Show trigger context
         run: |
+          echo "============================================"
+          echo "  Copilot MFE Agent Starting"
+          echo "============================================"
+          echo "  Mode       : ${{ inputs.mode }}"
+          echo "  Repository : ${{ github.repository }}"
+          echo "  Triggered by: ${{ github.actor }}"
+          echo "  Issue/PR   : ${{ github.event.issue.html_url || github.event.pull_request.html_url }}"
+          echo "  Run ID     : ${{ github.run_id }}"
+          echo "============================================"
+
+      - name: 🚀 Start OpenAPI MCP Server
+        run: |
+          echo "Starting OpenAPI MCP server..."
+          echo "Spec URL: https://noq8dav0ac.execute-api.us-east-1.amazonaws.com/db/api-docs"
           npx -y openapi-mcp-server \
             --spec https://noq8dav0ac.execute-api.us-east-1.amazonaws.com/db/api-docs &
+          MCP_PID=$!
+          echo "MCP server started with PID: $MCP_PID"
+          echo "Waiting for MCP server to be ready..."
+          sleep 3
+          echo "MCP server should be ready ✅"
 
-      # 👇 Keep this AFTER MCP
-      - name: Run Copilot Agent
+      - name: 🤖 Run Copilot Agent
         uses: github/copilot-agent@v1
         with:
           mode: ${{ inputs.mode }}
+
+      - name: ✅ Copilot Agent completed
+        if: success()
+        run: |
+          echo "============================================"
+          echo "  Copilot Agent finished successfully ✅"
+          echo "  Mode: ${{ inputs.mode }}"
+          echo "============================================"
+
+      - name: ❌ Copilot Agent failed
+        if: failure()
+        run: |
+          echo "============================================"
+          echo "  Copilot Agent FAILED ❌"
+          echo "  Mode: ${{ inputs.mode }}"
+          echo "  Check the 'Run Copilot Agent' step above"
+          echo "============================================"
