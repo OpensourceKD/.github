@@ -26,6 +26,13 @@ Before acting on any task:
 - Provide only relevant code and reasoning.
 - Avoid unnecessary explanations or filler text.
 
+## Pull Request
+
+After completing any code changes:
+1. Commit all changes with a clear, descriptive message.
+2. **Always open a Pull Request** targeting the default branch. Use a concise title and a short description summarising what was changed and why.
+3. Do not wait to be asked — PR creation is a required final step for every code change task.
+
 ## Mode
 
 The specific behavior for this run is controlled by the active mode prompt loaded alongside this base prompt.
