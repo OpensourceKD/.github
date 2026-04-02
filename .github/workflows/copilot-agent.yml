@@ -8,10 +8,15 @@ on:
         required: true
         type: string
       prompt_override:
-        description: "Optional prompt override (path to .md file)"
+        description: "Optional prompt override (path to .md file in calling repo)"
         required: false
         type: string
         default: ""
+      max_retries:
+        description: "Maximum number of agent invocations before skipping"
+        required: false
+        type: string
+        default: "3"
     secrets:
       GITHUB_TOKEN:
         required: true
@@ -25,8 +30,17 @@ jobs:
       issues: write
 
     steps:
-      - name: Checkout repository
+      - name: Checkout calling repository
         uses: actions/checkout@v4
+        with:
+          path: calling-repo
+
+      - name: Checkout governance repo
+        uses: actions/checkout@v4
+        with:
+          repository: OpensourceKD/.github
+          path: governance
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Validate mode input
         run: |
@@ -35,43 +49,78 @@ jobs:
             *) echo "Invalid mode: ${{ inputs.mode }}. Must be one of: shell-ui, mfe, api-lambda." && exit 1 ;;
           esac
 
+      - name: Check retry limit
+        id: retry_check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Waka Muku 1: If you see this... its good!"
+          MAX="${{ inputs.max_retries }}"
+          if [ "${{ github.event_name }}" = "issues" ]; then
+            NUMBER="${{ github.event.issue.number }}"
+          else
+            NUMBER="${{ github.event.number }}"
+          fi
+          REPO="${{ github.repository }}"
+          ATTEMPTS=$(gh api "repos/$REPO/issues/$NUMBER/labels" \
+            --jq '[.[] | select(.name | startswith("copilot-agent-attempt-"))] | length')
+          if [ "$ATTEMPTS" -ge "$MAX" ]; then
+            echo "Max retries ($MAX) reached for #$NUMBER — skipping agent run."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            NEXT=$((ATTEMPTS + 1))
+            gh api "repos/$REPO/issues/$NUMBER/labels" \
+              -X POST --field "labels[]=copilot-agent-attempt-$NEXT"
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Load base prompt
         id: base_prompt
+        if: steps.retry_check.outputs.skip != 'true'
         run: |
-          BASE=$(cat prompts/base.md)
+          BASE=$(cat governance/prompts/base.md)
           echo "content<<EOF" >> $GITHUB_OUTPUT
           echo "$BASE" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Load mode prompt
         id: mode_prompt
+        if: steps.retry_check.outputs.skip != 'true'
         run: |
-          PROMPT_FILE="${{ inputs.prompt_override }}"
-          if [ -z "$PROMPT_FILE" ]; then
-            PROMPT_FILE="prompts/modes/${{ inputs.mode }}.md"
+          if [ -n "${{ inputs.prompt_override }}" ]; then
+            PROMPT_FILE="calling-repo/${{ inputs.prompt_override }}"
+          else
+            PROMPT_FILE="governance/prompts/modes/${{ inputs.mode }}.md"
           fi
           MODE=$(cat "$PROMPT_FILE")
           echo "content<<EOF" >> $GITHUB_OUTPUT
           echo "$MODE" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Load config
-        id: config
-        run: |
-          CONFIG=$(cat config/copilot.json)
-          echo "content<<EOF" >> $GITHUB_OUTPUT
-          echo "$CONFIG" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Run Copilot agent
+      - name: Post Copilot agent prompt
+        if: steps.retry_check.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AGENT_MODE: ${{ inputs.mode }}
           BASE_PROMPT: ${{ steps.base_prompt.outputs.content }}
           MODE_PROMPT: ${{ steps.mode_prompt.outputs.content }}
-          AGENT_CONFIG: ${{ steps.config.outputs.content }}
         run: |
-          echo "Running Copilot agent in '$AGENT_MODE' mode..."
-          echo "Base prompt loaded: $(echo "$BASE_PROMPT" | wc -l) lines"
-          echo "Mode prompt loaded: $(echo "$MODE_PROMPT" | wc -l) lines"
-          echo "Config loaded: $(echo "$AGENT_CONFIG" | wc -c) bytes"
+          set -e
+          echo "Waka Muku 2: If you see this... its good!"
+          if [ "${{ github.event_name }}" = "issues" ]; then
+            NUMBER="${{ github.event.issue.number }}"
+          else
+            NUMBER="${{ github.event.number }}"
+          fi
+          REPO="${{ github.repository }}"
+          {
+            printf '@github-copilot\n\n'
+            printf '**Agent Mode:** `%s`\n\n---\n\n' "$AGENT_MODE"
+            printf '%s\n\n---\n\n' "$BASE_PROMPT"
+            printf '%s\n' "$MODE_PROMPT"
+          } > /tmp/agent-comment.md
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            gh pr comment "$NUMBER" --repo "$REPO" --body-file /tmp/agent-comment.md
+          else
+            gh issue comment "$NUMBER" --repo "$REPO" --body-file /tmp/agent-comment.md
+          fi
