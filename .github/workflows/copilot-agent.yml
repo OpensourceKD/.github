@@ -29,7 +29,11 @@ permissions:
 jobs:
   run-agent:
     runs-on: ubuntu-latest
-
+    # Below is not moved out of this block. Hence commenting
+    # permissions:
+    #   contents: read
+    #   pull-requests: write
+    #   issues: write
     steps:
       - name: Checkout calling repository
         uses: actions/checkout@v4
