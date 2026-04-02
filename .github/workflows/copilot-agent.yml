@@ -1,0 +1,29 @@
+name: Copilot Agent (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      mode:
+        required: true
+        type: string
+
+jobs:
+  copilot-agent:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Copilot Agent
+        uses: github/copilot-agent@v1
+        with:
+          mode: ${{ inputs.mode }}
+
+          tools: |
+            [
+              {
+                "type": "openapi",
+                "name": "core-api",
+                "spec_url": "https://noq8dav0ac.execute-api.us-east-1.amazonaws.com/db/api-docs"
+              }
+            ]
