@@ -1,12 +1,41 @@
 name: Copilot Agent
 
 on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Agent mode to run (shell-ui | mfe | api-lambda)"
+        required: true
+        type: choice
+        options:
+          - shell-ui
+          - mfe
+          - api-lambda
+      issue_number:
+        description: "Issue or PR number to comment on"
+        required: true
+        type: string
+      prompt_override:
+        description: "Optional prompt override (path to .md file in calling repo)"
+        required: false
+        type: string
+        default: ""
+      max_retries:
+        description: "Maximum number of agent invocations before skipping"
+        required: false
+        type: string
+        default: "3"
   workflow_call:
     inputs:
       mode:
         description: "Agent mode to run (shell-ui | mfe | api-lambda)"
         required: true
         type: string
+      issue_number:
+        description: "Explicit issue or PR number (overrides event context)"
+        required: false
+        type: string
+        default: ""
       prompt_override:
         description: "Optional prompt override (path to .md file in calling repo)"
         required: false
@@ -61,7 +90,9 @@ jobs:
         run: |
           echo "Waka Muku 1: If you see this... its good!"
           MAX="${{ inputs.max_retries }}"
-          if [ "${{ github.event_name }}" = "issues" ]; then
+          if [ -n "${{ inputs.issue_number }}" ]; then
+            NUMBER="${{ inputs.issue_number }}"
+          elif [ "${{ github.event_name }}" = "issues" ]; then
             NUMBER="${{ github.event.issue.number }}"
           else
             NUMBER="${{ github.event.number }}"
@@ -112,7 +143,9 @@ jobs:
         run: |
           set -e
           echo "Waka Muku 2: If you see this... its good!"
-          if [ "${{ github.event_name }}" = "issues" ]; then
+          if [ -n "${{ inputs.issue_number }}" ]; then
+            NUMBER="${{ inputs.issue_number }}"
+          elif [ "${{ github.event_name }}" = "issues" ]; then
             NUMBER="${{ github.event.issue.number }}"
           else
             NUMBER="${{ github.event.number }}"
