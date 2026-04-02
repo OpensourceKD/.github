@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "agent": {
+    "name": "copilot-agent",
+    "description": "Organization-wide Copilot coding agent for OpensourceKD",
+    "governance": ".github/copilot-instructions.md"
+  },
+  "prompts": {
+    "base": "prompts/base.md",
+    "modes": {
+      "shell-ui": "prompts/modes/shell-ui.md",
+      "mfe": "prompts/modes/mfe.md",
+      "api-lambda": "prompts/modes/api-lambda.md"
+    }
+  },
+  "workflow": ".github/workflows/copilot-agent.yml",
+  "limits": {
+    "max_iterations": 3,
+    "max_tool_calls": 5,
+    "max_files_changed": 10,
+    "retry_on_failure": false
+  },
+  "scope": {
+    "allow_cross_module_changes": false,
+    "allow_new_dependencies": false,
+    "require_tests_for_new_code": true
+  }
+}
