@@ -1,0 +1,20 @@
+name: Copilot Agent — Shell UI
+
+on:
+  issues:
+    types: [assigned]
+  pull_request:
+    types: [opened]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  copilot-agent:
+    uses: OpensourceKD/.github/.github/workflows/copilot-agent.yml@main
+    with:
+      mode: shell-ui
+      issue_number: ${{ github.event.issue.number || github.event.pull_request.number }}
+      entity_type: ${{ github.event_name == 'pull_request' && 'pr' || 'issue' }}
