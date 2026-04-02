@@ -1,0 +1,6 @@
+{
+  "name": "Copilot Agent — Shell UI",
+  "description": "Triggers the OpensourceKD Copilot governance agent in Shell UI mode when an issue is assigned or a PR is opened.",
+  "iconName": "octicon-cpu",
+  "categories": ["Automation"]
+}
