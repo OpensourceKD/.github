@@ -128,7 +128,17 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "============================================"
+          echo "  Copilot MFE Agent Starting"
+          echo "============================================"
+          # echo "  Mode       : ${{ inputs.mode }}"
+          # echo "  Repository : ${{ github.repository }}"
+          # echo "  Triggered by: ${{ github.actor }}"
+          # echo "  Issue/PR   : ${{ github.event.issue.html_url || github.event.pull_request.html_url }}"
+          # echo "  Run ID     : ${{ github.run_id }}"
           echo "Waka Muku 1: If you see this... its good!"
+          echo "============================================"
+          
           MAX="${{ inputs.max_retries }}"
           NUMBER="${{ inputs.issue_number }}"
           REPO="${{ github.repository }}"
@@ -157,6 +167,10 @@ jobs:
         id: mode_prompt
         if: steps.retry_check.outputs.skip != 'true'
         run: |
+          echo "============================================"
+          echo "  Copilot Agent finished successfully ✅"
+          echo "  Mode: ${{ inputs.mode }}"
+          echo "============================================"
           if [ -n "${{ inputs.prompt_override }}" ]; then
             PROMPT_FILE="calling-repo/${{ inputs.prompt_override }}"
           else
