@@ -20,9 +20,9 @@ Every product is independently deployable, type-safe end-to-end, and built for s
 
 ## 🚀 Products
 
-### i17e — Internationalisation Platform
+### i17e — Internationalization Platform
 
-> **i17e** (`i` + 17 letters + `e`) is a developer-first internationalisation platform that makes translation management a first-class engineering concern.
+> **i17e** (`i` + 17 letters + `e`) is a developer-first internationalization platform that makes translation management a first-class engineering concern.
 
 - 🔤 **Core engine** — structured translation key management with type-safe extraction
 - 🖊️ **Editor UI** — in-context translation editor MFE for non-technical contributors
