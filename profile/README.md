@@ -27,7 +27,7 @@ i17e is a **Sales Incentive Compensation Management (SICM)** platform that gives
 | **Sales Ops / Admins** | Create and manage incentive rules without writing code |
 | **Sales Executives** | Real-time visibility into earnings and performance |
 | **Finance / Leadership** | Accurate reconciliation, audit trails, and executive-level analytics |
-| **Engineering Teams** | Production-grade API with 100 % automated test coverage and dual-DB flexibility |
+| **Engineering Teams** | Production-grade API with 100% automated test coverage and dual-DB flexibility |
 
 ---
 
@@ -40,7 +40,7 @@ i17e is a **Sales Incentive Compensation Management (SICM)** platform that gives
 | 🖥️ **Prototype UI** | Angular shell with MFE-ready architecture, responsive layouts, and a design-token system |
 | 🔌 **REST API Endpoints** | Full CRUD for incentive rules; versioned, schema-validated, and documented |
 | 🔐 **Auth0 Integration** | SSO login · logout · silent token refresh · role-based route guards |
-| 🧪 **100 % Automated API Testing** | Every endpoint covered — happy paths, edge cases, and security assertions |
+| 🧪 **100% Automated API Testing** | Every endpoint covered — happy paths, edge cases, and security assertions |
 | 🛡️ **Data Compliance & Security** | Input sanitisation, HTTPS-only, CORS policy, secrets via environment config |
 | 🗄️ **Dual Database Support** | Pluggable adapter layer — run on-prem (self-hosted DB) *or* off-prem (cloud-managed) with zero code change |
 
@@ -146,7 +146,7 @@ i17e is a **Sales Incentive Compensation Management (SICM)** platform that gives
 |---|:---:|:---:|:---:|:---:|
 | Prototype UI | ✅ | ✅ | ✅ | ✅ |
 | Auth0 SSO | ✅ | ✅ | ✅ | ✅ |
-| REST API + 100 % test coverage | ✅ | ✅ | ✅ | ✅ |
+| REST API + 100% test coverage | ✅ | ✅ | ✅ | ✅ |
 | Data compliance &amp; security | ✅ | ✅ | ✅ | ✅ |
 | Dual DB (on-prem / off-prem) | ✅ | ✅ | ✅ | ✅ |
 | Analytics foundation | — | 🔵 | ✅ | ✅ |
