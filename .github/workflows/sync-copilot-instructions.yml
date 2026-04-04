@@ -1,0 +1,28 @@
+name: Sync Copilot Instructions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/copilot-instructions.md'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo: [mfe-MY_SALES, i17e]   # add more repos here as needed
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Push to ${{ matrix.repo }}
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.PAT_TOKEN }}
+        with:
+          source_file: '.github/copilot-instructions.md'
+          destination_repo: 'OpensourceKD/${{ matrix.repo }}'
+          destination_folder: '.github'
+          user_email: 'github-actions@github.com'
+          user_name: 'github-actions'
+          commit_message: 'chore: sync copilot-instructions from central .github repo'
