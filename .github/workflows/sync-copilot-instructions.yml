@@ -2,7 +2,7 @@ name: Sync Copilot Instructions
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop, feat/*, copilot/*, fix/*]
     paths:
       - '.github/copilot-instructions.md'
 
